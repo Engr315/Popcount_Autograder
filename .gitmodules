@@ -1,0 +1,3 @@
+[submoduels "qemu315"]
+  path = qemuE315
+  url = git@github.com:matteovidali/qemu315.git
