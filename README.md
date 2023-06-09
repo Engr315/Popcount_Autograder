@@ -9,12 +9,14 @@ or make a pull request.
 Clone this repository as it is:
 `git clone https://github.com/Engr315/Popcount_Autograder.git`
 
-Then to install dependancies, build binaries and run the qemu system, run:
+ON DEBIAN ONLY: To install dependancies, build binaries and run the qemu system, run:
 `make`
 
 For a more controlled installation process, begin by installing requirements with:
-`make deps`
 
+Debian: `make deps`
+RHEL: `make deps-rhel`
+RHEL: 
 Then the binaries can be built with:
 `make build`
 
