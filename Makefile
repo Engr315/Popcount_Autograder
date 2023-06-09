@@ -19,8 +19,12 @@ run: qemu-w-device
 
 deps:
 	sudo apt update
-	sudo apt install libc6-armel-cross libc6-devarmel-cross binutils-arm-linux-gnueabi libncurses5-dev \
-		build-essential bison flex libssl-dev bc gcc-arm-linux-gnueabi ninja
+	sudo apt install -y libc6-armel-cross libc6-dev-armel-cross binutils-arm-linux-gnueabi libncurses5-dev \
+		build-essential bison flex libssl-dev bc ninja-build libglib2.0-dev
+
+deps-rhel:
+	yum install git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 ninja-build python3
+
 
 build: build-qemu
 
