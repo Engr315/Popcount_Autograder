@@ -18,6 +18,9 @@ Debian: `make deps`
 
 RHEL: `make deps-rhel`
 
+Debian: `make deps`
+RHEL: `make deps-rhel`
+RHEL: 
 Then the binaries can be built with:
 `make build`
 
