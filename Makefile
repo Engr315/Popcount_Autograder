@@ -23,7 +23,7 @@ deps:
 		build-essential bison flex libssl-dev bc ninja-build libglib2.0-dev
 
 deps-rhel:
-	yum install git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 ninja-build python3
+	sudo yum install git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 ninja-build python3
 
 
 build: build-qemu
