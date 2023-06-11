@@ -10,7 +10,7 @@ ITEM?=../../experiments/user-drivers/uio.arm
 INAME?=uio.arm
 
 # QEMU - Custom
-DEVQEMU=./qemu315/build/qemu-system-arm
+DEVQEMU?=./qemu315/build/qemu-system-arm
 
 all: deps build run
 
@@ -24,7 +24,6 @@ deps:
 
 deps-rhel:
 	sudo yum install git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 ninja-build python3
-
 
 build: build-qemu
 
@@ -41,6 +40,14 @@ build-qemu:
 		cd qemu315/build && ../configure --target-list=arm-softmmu; \
 	fi
 	(cd qemu315/build; make -j$(nproc))
+
+run-from-tar:
+	if [ ! -d "./qcomps" ]; then \
+		tar -xzvf qcomps.tar.gz; \
+	fi
+	make run DEVQEMU=qcomps/build/qemu-system-arm \
+		KRNL=qcomps/compiled/uio_linux-5.10.4.zImage \
+		IMG=qcomps/compiled/uio-rootfs2.ext2
 
 clean-qemu:
 	rm -rf qemu315/build
