@@ -1,0 +1,5 @@
+# Avoid compressed filesystems
+*.tar.gz
+
+# Avoid packaged folder
+qcomps/

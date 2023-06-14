@@ -27,7 +27,7 @@ deps-rhel:
 
 build: build-qemu
 
-clean: clean-qemu
+clean: clean-qemu clean-qemu-pack
 
 place-ko: item_go_in ITEM=./compiled/uio_pcnt.ko INAME=uio_pcnt.ko
 
@@ -41,16 +41,77 @@ build-qemu:
 	fi
 	(cd qemu315/build; make -j$(nproc))
 
+#cd qemu315/build-inst && ../configure --target-list=arm-softmmu --disable-sdl; 
+build-qemu-pack: 
+	if [ ! -d "./qemu315/build-inst" ]; then \
+		cd qemu315 && mkdir build-inst; \
+	fi
+	if [ ! -f "./qemu315/build-inst/Makefile" ]; then \
+		cd qemu315/build-inst && ../configure --target-list=arm-softmmu \
+		--disable-tools --disable-sdl --disable-gtk --disable-vnc --disable-virtfs \
+		--disable-attr --disable-libiscsi --disable-libnfs --disable-libusb \
+		--disable-opengl --disable-numa --disable-usb-redir --disable-bzip2 \
+		--audio-drv-list= --disable-guest-agent --disable-vte --disable-mpath \
+		--disable-sndio --disable-alsa --disable-slirp --disable-pa --disable-gio\
+		--disable-curses \
+		--disable-libudev --disable-vhost-user --disable-curl --disable-gnutls; \
+	fi
+	(cd qemu315/build-inst; make -j$(nproc) install DESTDIR=./package_install)
+
+assemble-qemu-pack: build-qemu-pack
+	mkdir qcomps
+	mkdir qcomps/qemu
+	mkdir qcomps/compiled
+	mkdir qcomps/qemu/share
+	mkdir qcomps/qemu/share/qemu
+	mkdir qcomps/qemu/share/qemu/firmware
+	mkdir qcomps/qemu/share/qemu/keymaps
+	cp -r qemu315/build-inst/package_install/usr/local/bin qcomps/qemu/bin
+	cp -r qemu315/build-inst/package_install/usr/local/include/ qcomps/qemu/include
+	cp qemu315/build-inst/package_install/usr/local/share/qemu/{efi-virtio.rom,qboot.rom,vof.bin} qcomps/qemu/share/qemu
+	cp -r qemu315/build-inst/package_install/usr/local/share/qemu/firmware/ qcomps/qemu/share/qemu/firmware/
+	cp qemu315/build-inst/package_install/usr/local/share/qemu/keymaps/en-us qcomps/qemu/share/qemu/keymaps/
+	cp compiled/{uio-rootfs2.ext2,uio_linux-5.10.4.zImage} qcomps/compiled/
+	tar -cvzf qcomps.tar.gz qcomps
+
+clean-qemu-pack:
+	rm -rf qcomps
+	rm -rf qemu315/build-inst
+
+# The intention of this target is to build the custom qemu statically and 
+# as small as possible, but it is currently failing due to libxkbcommon library
+# this is not ment to be run just yet, but if it can be solved than it will
+# improve the size of the qemu requirement drastically!
+build-qemu-static: build-qemu
+	if [ ! -d "./qemu315/build-static" ]; then \
+		cd qemu315 && mkdir build-static; \
+	fi
+	if [ ! -f "./qemu315/build-static/Makefile" ]; then \
+		cd qemu315/build-static && ../configure --target-list=arm-softmmu --static \
+		--disable-tools --disable-sdl --disable-gtk --disable-vnc --disable-virtfs \
+		--disable-attr --disable-libiscsi --disable-libnfs --disable-libusb \
+		--disable-opengl --disable-numa --disable-usb-redir --disable-bzip2 \
+		--audio-drv-list= --disable-guest-agent --disable-vte --disable-mpath \
+		--disable-sndio --disable-alsa --disable-slirp --disable-pa --disable-gio\
+		--disable-libudev --disable-vhost-user --disable-curl --disable-gnutls; \
+	fi
+	(cd qemu315/build-static; make -j$(nproc))
+
+
 run-from-tar:
 	if [ ! -d "./qcomps" ]; then \
 		tar -xzvf qcomps.tar.gz; \
 	fi
-	make run DEVQEMU=qcomps/build/qemu-system-arm \
+	make run DEVQEMU=qcomps/qemu/bin/qemu-system-arm \
 		KRNL=qcomps/compiled/uio_linux-5.10.4.zImage \
 		IMG=qcomps/compiled/uio-rootfs2.ext2
 
 clean-qemu:
 	rm -rf qemu315/build
+	rm -rf qemu315/build-static
+
+clean-tar:
+	rm -rf qcomps
 
 qemu-stock:
 	/bin/qemu-system-arm -M virt,highmem=off \
