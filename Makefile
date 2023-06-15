@@ -59,13 +59,7 @@ build-qemu-pack:
 	(cd qemu315/build-inst; make -j$(nproc) install DESTDIR=./package_install)
 
 assemble-qemu-pack: build-qemu-pack
-	mkdir qcomps
-	mkdir qcomps/qemu
-	mkdir qcomps/compiled
-	mkdir qcomps/qemu/share
-	mkdir qcomps/qemu/share/qemu
-	mkdir qcomps/qemu/share/qemu/firmware
-	mkdir qcomps/qemu/share/qemu/keymaps
+	mkdir -p qcomps/{qemu/share/qemu/{firmware,keymaps},compiled}
 	cp -r qemu315/build-inst/package_install/usr/local/bin qcomps/qemu/bin
 	cp -r qemu315/build-inst/package_install/usr/local/include/ qcomps/qemu/include
 	cp qemu315/build-inst/package_install/usr/local/share/qemu/{efi-virtio.rom,qboot.rom,vof.bin} qcomps/qemu/share/qemu
