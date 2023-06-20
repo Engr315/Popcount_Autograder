@@ -4,3 +4,4 @@
 /stuff/uio.arm /stuff/files/small.bin >> /stuff/output.txt
 /stuff/uio.arm /stuff/files/medium.bin >> /stuff/output.txt
 /stuff/uio.arm /stuff/files/large.bin >> /stuff/output.txt
+poweroff
