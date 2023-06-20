@@ -112,3 +112,7 @@ item_go_in:
 	sudo mount -o loop $(IMG) /mnt/uio
 	sudo cp $(ITEM) /mnt/uio/stuff/$(INAME)
 	sudo umount /mnt/uio
+
+get-qcomps:
+	wget https://github.com/Engr315/Popcount_Autograder/releases/latest/download/qcomps.tar.gz
+	tar -xf qcomps.tar.gz
