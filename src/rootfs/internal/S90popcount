@@ -1,3 +1,4 @@
+chmod +x /stuff/uio.arm
 /stuff/uio.arm /stuff/files/zeros.bin > /stuff/output.txt
 /stuff/uio.arm /stuff/files/ones.bin >> /stuff/output.txt
 /stuff/uio.arm /stuff/files/tiny.bin >> /stuff/output.txt
