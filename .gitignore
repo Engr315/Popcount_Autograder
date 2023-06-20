@@ -3,3 +3,7 @@
 
 # Avoid packaged folder
 qcomps/
+
+# Don't monitor changes to qemu315 as all changes should be done in the 
+# original repo
+qemu315/
