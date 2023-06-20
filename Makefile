@@ -12,26 +12,38 @@ INAME?=uio.arm
 # QEMU - Custom
 DEVQEMU?=./qemu315/build/qemu-system-arm
 
+# Installs dependancies, Builds qemu315 from scratch and runs the simulation
 all: deps build run
 
 # Runs the qemu system emulator with emulated device and populated filesystem
 run: qemu-w-device
 
+# Installs ALL necessary dependancies for this build
 deps:
 	sudo apt update
 	sudo apt install -y libc6-armel-cross libc6-dev-armel-cross binutils-arm-linux-gnueabi libncurses5-dev \
 		build-essential bison flex libssl-dev bc ninja-build libglib2.0-dev libpixman-1-dev gcc-arm-linux-gnueabi libfdt-dev\
 		e2tools
 
+# An attempt at covering all the required dependancies on RHEL
+# This is not working, but the skeleton is there.
+# NinjaBuild needs to be compiled from scratch, and analogs for the deps target 
+# must be found
 deps-rhel:
 	sudo yum install git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 ninja-build python3
 
+# A generic buiid target to capture all potential build targets
 build: build-qemu
 
+# the general clean target
 clean: clean-qemu clean-qemu-pack
 
+# A dirty shortcut to place the kernel object - depreciated - should
+# be replaced with e2cp <e2tools>
 place-ko: item_go_in ITEM=./compiled/uio_pcnt.ko INAME=uio_pcnt.ko
 
+# Builds qemu from the custom repository Contains all libraries
+# and is not intended for packaging - this is for debuging and testing only
 build-qemu:
 	if [ ! -d "./qemu315/build" ]; then \
 		git submodule update --init --remote; \
@@ -42,7 +54,9 @@ build-qemu:
 	fi
 	(cd qemu315/build; make -j$(nproc))
 
-#cd qemu315/build-inst && ../configure --target-list=arm-softmmu --disable-sdl; 
+# Builds qemu with as few enabled libraries as possible
+# May still be able to build with the --disable-fdt flag to remove dependancy
+# on libfdt-dev
 build-qemu-pack: 
 	if [ ! -d "./qemu315/build-inst" ]; then \
 		cd qemu315 && mkdir build-inst; \
@@ -59,6 +73,9 @@ build-qemu-pack:
 	fi
 	(cd qemu315/build-inst; make -j$(nproc) install DESTDIR=./package_install)
 
+# Assembles the release binaries and other required files
+# Only takes what is absolutley necessary (plus some extra lol)
+# into the qcomps folder and subsequently into the qcomps.tar.gz
 assemble-qemu-pack: build-qemu-pack
 	# Getting required components of qemu and placing them here
 	mkdir -p qcomps/{qemu/share/qemu/{firmware,keymaps},compiled}
@@ -73,10 +90,12 @@ assemble-qemu-pack: build-qemu-pack
 	cp src/misc/* qcomps
 	tar -cvzf qcomps.tar.gz qcomps
 
+# A clean target for the assembly process assemble-qemu-pack
 clean-qemu-pack:
 	rm -rf qcomps
 	rm -rf qemu315/build-inst
 
+# will run qemu from the tarball (if only have release) no need to build
 run-from-tar:
 	if [ ! -d "./qcomps" ]; then \
 		tar -xzvf qcomps.tar.gz; \
@@ -85,13 +104,18 @@ run-from-tar:
 		KRNL=qcomps/compiled/uio_linux-5.10.4.zImage \
 		IMG=qcomps/compiled/uio-rootfs2.ext2
 
+# Cleans the qemu builds
 clean-qemu:
 	rm -rf qemu315/build
 	rm -rf qemu315/build-static
 
+# Isolated target to clean the build leftovers from assemble-qemu-pack
 clean-tar:
 	rm -rf qcomps
 
+# Correct running of the qemu system - DOES NOT contains popcount hardware
+# Relies on you having installed qemu-system-arm via apt or other system 
+# package manager, or, if you are particular - done a proper installation from source.
 qemu-stock:
 	/bin/qemu-system-arm -M virt,highmem=off \
 			-cpu cortex-a15 \
@@ -100,6 +124,9 @@ qemu-stock:
 			-append "console=ttyAMA0,115200 root=/dev/vda" \
 			-nographic
 
+# Correct running of the qemu system - contains popcount hardware
+# This can also have the -semihosting argument if desired, but found to be 
+# unnecessary
 qemu-w-device:
 	$(DEVQEMU) -M virt,highmem=off \
     -cpu cortex-a15 \
@@ -108,12 +135,15 @@ qemu-w-device:
     -append "console=ttyAMA0,115200 root=/dev/vda" \
     -nographic
 
+# A generic script to put items into an ext2 image
+# This is somewhat depreciated and has been replaced with e2cp <e2tools>
 item_go_in:
 	if [ ! -d "/mnt/uio" ]; then sudo mkdir /mnt/uio; fi
 	sudo mount -o loop $(IMG) /mnt/uio
 	sudo cp $(ITEM) /mnt/uio/stuff/$(INAME)
 	sudo umount /mnt/uio
 
+# For use by the autograder to get the latest release
 get-qcomps:
 	wget https://github.com/Engr315/Popcount_Autograder/releases/latest/download/qcomps.tar.gz
 	tar -xf qcomps.tar.gz
