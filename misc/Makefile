@@ -22,31 +22,28 @@ result: place_script
     -append "console=ttyAMA0,115200 root=/dev/vda" \
     -nographic
 	
-	if [ ! -d "mnt" ]; then mkdir -p mnt; fi
-	sudo mount $(IMG) mnt
-	sudo cp mnt/stuff/output.txt ./result
-	sudo umount mnt
-	sudo rmdir mnt	
+	e2cp $(IMG):/stuff/output.txt ./result
+
 
 .PHONY: test
-test: result
+test_zero: result
 	sed '1!d' result | grep $(ZEROS); test $$? -eq 0
+test_ones: result
 	sed '2!d' result | grep $(ONES); test $$? -eq 0
+test_tiny: result
 	sed '3!d' result | grep $(TINY); test $$? -eq 0
+test_small: result
 	sed '4!d' result | grep $(SMALL); test $$? -eq 0
+test_medium: result
 	sed '5!d' result | grep $(MEDIUM); test $$? -eq 0
+test_large: result
 	sed '6!d' result | grep $(LARGE); test $$? -eq 0
 
 $(OUTNAME): user_mmio.c
 	arm-linux-gnueabi-gcc -static -o $(OUTNAME) $(SRC)	
 
 place_script:	$(OUTNAME)
-	if [ ! -d "mnt" ]; then mkdir -p mnt; fi
-	sudo mount $(IMG) mnt 
-	if [ -f "./mnt/stuff/$(OUTNAME)" ]; then sudo rm ./mnt/stuff/$(OUTNAME); fi
-	sudo cp $(OUTNAME) ./mnt/stuff/$(OUTNAME)
-	sudo umount ./mnt
-	rmdir ./mnt
+	e2cp $(OUTNAME) $(IMG):/stuff/$(OUTNAME)
 
 clean:
 	rm -rf uio.arm
