@@ -1,4 +1,4 @@
-sudo mount -o loop uio-rootfs.ext2 /mnt/uio
+sudo mount -o loop autograder.ext2 /mnt/uio
 sudo mkdir /mnt/uio/stuff
 sudo mkdir /mnt/uio/etc/modules
 sudo mkdir /mnt/uio/stuff/files

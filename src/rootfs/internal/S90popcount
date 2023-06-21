@@ -1,11 +1,13 @@
-chmod +x /stuff/uio.arm
-
 FILES="/stuff/files/*"
 OUT="/stuff/output.txt"
 
-for f in $(FILES)
+chmod +x /stuff/uio.arm
+rm ${OUT}
+
+for f in ${FILES}
 do
-echo -n "$f " >> $(OUT)
-/stuff/uio.arm /stuff/files/$f >> /stuff/output.txt
+echo -n "$(basename ${f}) " >> ${OUT}
+/stuff/uio.arm $f >> ${OUT}
 done
+
 poweroff

@@ -28,7 +28,7 @@ result: place_script
 
 .PHONY: test
 test: 
-	sed -n '/$(TEST_FILE)/p' compare | grep $($(TEST_FILE)_V); test $$? -eq 0
+	sed -n '/$(TEST_FILE)/p' result | grep $($(TEST_FILE)_V); test $$? -eq 0
 
 $(OUTNAME): user_mmio.c
 	arm-linux-gnueabi-gcc -static -o $(OUTNAME) $(SRC)	
