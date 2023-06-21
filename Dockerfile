@@ -1,7 +1,6 @@
 FROM eecsautograder/ubuntu22:latest
-
 COPY . .
-
-RUN apt update && apt install -y cmake sudo tar wget e2tools && make deps
-RUN make get-qcomps
-
+RUN apt update 
+RUN apt install -y libncurses5-dev gcc-arm-linux-gnueabi e2tools libfdt-dev wget tar
+RUN wget -q https://github.com/Engr315/Popcount_Autograder/releases/latest/download/qcomps.tar.gz
+RUN tar -xf qcomps.tar.gz

@@ -1,8 +1,13 @@
+FILES="/stuff/files/*"
+OUT="/stuff/output.txt"
+
 chmod +x /stuff/uio.arm
-/stuff/uio.arm /stuff/files/zeros.bin > /stuff/output.txt
-/stuff/uio.arm /stuff/files/ones.bin >> /stuff/output.txt
-/stuff/uio.arm /stuff/files/tiny.bin >> /stuff/output.txt
-/stuff/uio.arm /stuff/files/small.bin >> /stuff/output.txt
-/stuff/uio.arm /stuff/files/medium.bin >> /stuff/output.txt
-/stuff/uio.arm /stuff/files/large.bin >> /stuff/output.txt
+rm ${OUT}
+
+for f in ${FILES}
+do
+echo -n "$(basename ${f}) " >> ${OUT}
+/stuff/uio.arm $f >> ${OUT}
+done
+
 poweroff
