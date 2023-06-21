@@ -5,6 +5,8 @@ DEVQEMU=qemu/bin/qemu-system-arm
 KRNL=compiled/uio_linux-5.10.4.zImage 
 IMG=compiled/autograder.ext2
 
+TEST_FILE=zeros.bin
+
 zeros.bin_V="0"
 ones.bin_V="2048"
 tiny.bin_V="968"
@@ -24,7 +26,8 @@ result: place_script
 	
 	e2cp $(IMG):/stuff/output.txt ./result
 
-test_$(TEST_FILE): 
+.PHONY: test
+test: 
 	sed -n '/$(TEST_FILE)/p' compare | grep $($(TEST_FILE)_V); test $$? -eq 0
 
 $(OUTNAME): user_mmio.c
