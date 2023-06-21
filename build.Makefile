@@ -1,34 +1,59 @@
+# THE BUID MAKEFILE FOR THE QEMU POPCOUNT PROJECT
+# Written By: Matteo Vidali (mvidali@iu.edu)
+# -----------------------------------------------
+#  This file is responsible for alot of things, but 
+#  mainly it is repsponsible for setting up and using the debug version of 
+#  the qemu popcount system from source.
+# -----------------------------------------------
+
 SHELL:=/bin/bash
 
-# Important names and locations
-HOST_ADAPTER?=enx001cc25eb9e1
+# Important names and locations of compiled binaries
+# These can be recompiled from source in the ./src directory
 KRNL?=./compiled/uio_linux-5.10.4.zImage
 IMG?=./compiled/uio-rootfs.ext2
 
-# Variables for loading things into the image
-ITEM?=../../experiments/user-drivers/uio.arm
-INAME?=uio.arm
-
-# QEMU - Custom
+# Location of the qemu-system binary after building
 DEVQEMU?=./qemu315/build/qemu-system-arm
 
 # Installs dependancies, Builds qemu315 from scratch and runs the simulation
+.PHONY: all
 all: deps build run
 
 # Runs the qemu system emulator with emulated device and populated filesystem
+.PHONY: run
 run: qemu-w-device
 
 # Installs ALL necessary dependancies for this build
+# These dependancies are to BUILD AND RUN - some may be extra
+# for simply running 
+# TODO: Split this out into those required for building and thos responsibe 
+# 			for running
+.PHONY: deps
 deps:
 	sudo apt update
-	sudo apt install -y libc6-armel-cross libc6-dev-armel-cross binutils-arm-linux-gnueabi libncurses5-dev \
-		build-essential bison flex libssl-dev bc ninja-build libglib2.0-dev libpixman-1-dev gcc-arm-linux-gnueabi libfdt-dev\
-		e2tools
+	sudo apt install -y libc6-armel-cross \
+											libc6-dev-armel-cross \
+											binutils-arm-linux-gnueabi \
+											libncurses5-dev \
+											build-essential \
+											bison \
+											flex \
+											libssl-dev \
+											bc \
+											ninja-build \
+											libglib2.0-dev \
+											libpixman-1-dev \
+											gcc-arm-linux-gnueabi \
+											libfdt-dev\
+											e2tools
 
 # An attempt at covering all the required dependancies on RHEL
 # This is not working, but the skeleton is there.
 # NinjaBuild needs to be compiled from scratch, and analogs for the deps target 
 # must be found
+# TODO: Port all dependancies to RHEL
+.PHONY: deps-rhel
 deps-rhel:
 	sudo yum install git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 ninja-build python3
 
@@ -44,6 +69,7 @@ place-ko: item_go_in ITEM=./compiled/uio_pcnt.ko INAME=uio_pcnt.ko
 
 # Builds qemu from the custom repository Contains all libraries
 # and is not intended for packaging - this is for debuging and testing only
+.PHONY: build-qemu
 build-qemu:
 	if [ ! -d "./qemu315/build" ]; then \
 		git submodule update --init --remote; \
@@ -57,8 +83,11 @@ build-qemu:
 # Builds qemu with as few enabled libraries as possible
 # May still be able to build with the --disable-fdt flag to remove dependancy
 # on libfdt-dev
-build-qemu-pack: 
+# TODO: confirm libfdt is superflous and remove it
+.PHONY: build-qemu-pack
+build-qemu-pack:
 	if [ ! -d "./qemu315/build-inst" ]; then \
+		git submodule update --init --remote \
 		cd qemu315 && mkdir build-inst; \
 	fi
 	if [ ! -f "./qemu315/build-inst/Makefile" ]; then \
@@ -76,7 +105,7 @@ build-qemu-pack:
 # Assembles the release binaries and other required files
 # Only takes what is absolutley necessary (plus some extra lol)
 # into the qcomps folder and subsequently into the qcomps.tar.gz
-assemble-qemu-pack: build-qemu-pack
+qcomps: build-qemu-pack
 	# Getting required components of qemu and placing them here
 	mkdir -p qcomps/{qemu/share/qemu/{firmware,keymaps},compiled}
 	cp -r qemu315/build-inst/package_install/usr/local/bin qcomps/qemu/bin
@@ -88,15 +117,20 @@ assemble-qemu-pack: build-qemu-pack
 	cp compiled/{autograder.ext2,uio_linux-5.10.4.zImage} qcomps/compiled/
 	# Get qcomps required files into the folder
 	cp src/misc/* qcomps
+
+qcomps.tar.gz: qcomps
 	tar -cvzf qcomps.tar.gz qcomps
 
 # A clean target for the assembly process assemble-qemu-pack
+.PHONY: clean-qemu-pack
 clean-qemu-pack:
 	rm -rf qcomps
 	rm -rf qemu315/build-inst
+	rm -rf qcomps.tar.gz
 
 # will run qemu from the tarball (if only have release) no need to build
-run-from-tar:
+.PHONY: run-from-tar
+run-from-tar: qcomps.tar.gz
 	if [ ! -d "./qcomps" ]; then \
 		tar -xzvf qcomps.tar.gz; \
 	fi
@@ -105,18 +139,16 @@ run-from-tar:
 		IMG=qcomps/compiled/uio-rootfs2.ext2
 
 # Cleans the qemu builds
+.PHONY: clean-qemu
 clean-qemu:
 	rm -rf qemu315/build
 	rm -rf qemu315/build-static
 
-# Isolated target to clean the build leftovers from assemble-qemu-pack
-clean-tar:
-	rm -rf qcomps
-
 # Correct running of the qemu system - DOES NOT contains popcount hardware
 # Relies on you having installed qemu-system-arm via apt or other system 
 # package manager, or, if you are particular - done a proper installation from source.
-qemu-stock:
+.PHONY: qemu-stock
+qemu-stock: /bin/qemu-system-arm
 	/bin/qemu-system-arm -M virt,highmem=off \
 			-cpu cortex-a15 \
 			-m 128 -kernel $(KRNL) \
@@ -127,6 +159,7 @@ qemu-stock:
 # Correct running of the qemu system - contains popcount hardware
 # This can also have the -semihosting argument if desired, but found to be 
 # unnecessary
+.PHONY: qemu-w-device
 qemu-w-device:
 	$(DEVQEMU) -M virt,highmem=off \
     -cpu cortex-a15 \
@@ -137,13 +170,8 @@ qemu-w-device:
 
 # A generic script to put items into an ext2 image
 # This is somewhat depreciated and has been replaced with e2cp <e2tools>
-item_go_in:
+item_go_in: $(ITEM) $(INAME)
 	if [ ! -d "/mnt/uio" ]; then sudo mkdir /mnt/uio; fi
 	sudo mount -o loop $(IMG) /mnt/uio
 	sudo cp $(ITEM) /mnt/uio/stuff/$(INAME)
 	sudo umount /mnt/uio
-
-# For use by the autograder to get the latest release
-get-qcomps:
-	wget https://github.com/Engr315/Popcount_Autograder/releases/latest/download/qcomps.tar.gz
-	tar -xf qcomps.tar.gz
