@@ -1,3 +1,8 @@
+# Author: Matteo Vidali
+# ---------------------
+# Test makefile that the docker image will use to
+# test the students code.
+# ---------------------
 IMG?=./compiled/uio-rootfs2.ext2
 SRC?=user_mmio.c
 OUTNAME=uio.arm

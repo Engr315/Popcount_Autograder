@@ -168,6 +168,18 @@ qemu-w-device:
     -append "console=ttyAMA0,115200 root=/dev/vda" \
     -nographic
 
+# runs qemu with the axi_dma device included
+.PHONY: qemu-w-DMA
+qemu-w-DMA:
+	$(DEVQEMU) -M virt,highmem=off \
+    -cpu cortex-a15 \
+    -m 128 -kernel $(KRNL) \
+		-device xlnx.axi-dma \
+    -drive file=$(IMG),if=virtio,format=raw \
+    -append "console=ttyAMA0,115200 root=/dev/vda" \
+    -nographic
+
+
 # A generic script to put items into an ext2 image
 # This is somewhat depreciated and has been replaced with e2cp <e2tools>
 item_go_in: $(ITEM) $(INAME)
