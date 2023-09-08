@@ -18,8 +18,10 @@ DEVQEMU?=./qemu315/build/qemu-system-arm
 
 # Installs dependancies, Builds qemu315 from scratch and runs the simulation
 .PHONY: all
-all: deps build run
+all: deps build src run
 
+src: 
+	(cd src; make all)
 # Runs the qemu system emulator with emulated device and populated filesystem
 .PHONY: run
 run: qemu-w-device
