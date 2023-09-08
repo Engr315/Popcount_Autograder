@@ -11,7 +11,7 @@
 #define DEVNAME "popcount-uio"
 
 #define BASE_ADDR 0x40000000
-#define SIZE      0x1000
+#define SIZE      0x10000
 
 static struct uio_info *info; // This is the vital dev info struct
 static struct device *dev; // device structure
