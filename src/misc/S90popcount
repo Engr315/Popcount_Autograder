@@ -1,13 +1,13 @@
 FILES="/stuff/files/*"
 OUT="/stuff/output.txt"
 
-chmod +x /stuff/uio.arm
+chmod +x /stuff/user_mmio.arm
 rm ${OUT}
 
 for f in ${FILES}
 do
 echo -n "$(basename ${f}) " >> ${OUT}
-/stuff/uio.arm $f >> ${OUT}
+/stuff/user_mmio.arm $f >> ${OUT}
 done
 
 poweroff

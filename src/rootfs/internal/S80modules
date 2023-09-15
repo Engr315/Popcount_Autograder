@@ -1,1 +1,15 @@
-insmod /etc/modules/uio_pcnt.ko
+case "$1" in
+  start)
+	insmod /etc/modules/uio_pcnt.ko
+	insmod /etc/modules/u-dma-buf.ko udmabuf0=1048576
+	chmod +x /etc/init.d/S90run
+	;;
+  stop)
+  	rmmod uio_pcnt
+	rmmod u-dma-buf
+	;;
+  restart|reload|*)
+	echo "$1 not supported ATM"
+	exit 1
+esac
+exit $?
