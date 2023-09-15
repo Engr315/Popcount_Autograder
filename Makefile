@@ -75,7 +75,7 @@ place-ko: item_go_in ITEM=./compiled/uio_pcnt.ko INAME=uio_pcnt.ko
 build-qemu:
 	if [ ! -d "./qemu315/build" ]; then \
 		git submodule update --init --remote; \
-		cd qemu315 && mkdir build; \
+		cd qemu315 && git pull origin master && mkdir build; \
 	fi
 	if [ ! -f "./qemu315/build/Makefile" ]; then \
 		cd qemu315/build && ../configure --target-list=arm-softmmu; \
@@ -184,6 +184,7 @@ qemu-w-DMA:
 
 # A generic script to put items into an ext2 image
 # This is somewhat depreciated and has been replaced with e2cp <e2tools>
+# TODO: USE E2CP HERE
 item_go_in: $(ITEM) $(INAME)
 	if [ ! -d "/mnt/uio" ]; then sudo mkdir /mnt/uio; fi
 	sudo mount -o loop $(IMG) /mnt/uio
