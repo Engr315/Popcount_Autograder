@@ -78,16 +78,15 @@ build-qemu:
 		cd qemu315 && git pull origin master && mkdir build; \
 	fi
 	if [ ! -f "./qemu315/build/Makefile" ]; then \
-		cd qemu315/build-inst && ../configure --target-list=arm-softmmu; \
+		cd qemu315/build && ../configure --target-list=arm-softmmu; \
 	fi
-	(cd qemu315/build-inst; make -j$(nproc) install DESTDIR=./package_install)
-	#(cd qemu315/build; make -j$(nproc))
+	#(cd qemu315/build-inst; make -j$(nproc) install DESTDIR=./package_install)
+	(cd qemu315/build; make -j$(nproc))
 
 # Builds qemu with as few enabled libraries as possible
 # May still be able to build with the --disable-fdt flag to remove dependancy
 # on libfdt-dev
 # TODO: confirm libfdt is superflous and remove it
-# TODO: Figure out why this causes a seg fault in dma version
 .PHONY: build-qemu-pack
 build-qemu-pack:
 	if [ ! -d "./qemu315/build-inst" ]; then \
@@ -109,7 +108,7 @@ build-qemu-pack:
 # Assembles the release binaries and other required files
 # Only takes what is absolutley necessary (plus some extra lol)
 # into the qcomps folder and subsequently into the qcomps.tar.gz
-qcomps: build-qemu#-pack
+qcomps: build-qemu-pack
 	# Getting required components of qemu and placing them here
 	mkdir -p qcomps/{qemu/share/qemu/{firmware,keymaps},compiled}
 	cp -r qemu315/build-inst/package_install/usr/local/bin qcomps/qemu/bin
