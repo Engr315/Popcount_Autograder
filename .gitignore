@@ -7,3 +7,13 @@ qcomps/
 # Don't monitor changes to qemu315 as all changes should be done in the 
 # original repo
 qemu315/
+linux-5.10.4/
+
+# No kernel compilation stuff
+
+*.cmd
+*.order
+*.symvers
+*.o
+*.mod.c
+*.mod
