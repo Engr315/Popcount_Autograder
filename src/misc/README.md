@@ -7,13 +7,13 @@ The general premise of the autograder is as follows:
 For questions or concerns, contact Matteo Vidali. In the event of no response, contact Dr. Andrew Lukefahr.
 
 ## Components
+The autograder requires:
 
-    The autograder requires:
-    1. custom binary of QEMU with popcount and custom dma built in (qemu315)
-    2. custom arm linux kernel (kernel version 5.10.4) #TODO: check if 5.10 works from linux github 
-    3. custom kernel module to setup popcount as a uio device (uio_pcnt.ko)
-    4. kernel module to create and setup the DMA buffer
-    5. small disk image preloaded with relavent binaries
+1. custom binary of QEMU with popcount and custom dma built in (qemu315)
+2. custom arm linux kernel (kernel version 5.10.4) #TODO: check if 5.10 works from linux github 
+3. custom kernel module to setup popcount as a uio device (uio_pcnt.ko)
+4. kernel module to create and setup the DMA buffer
+5. small disk image preloaded with relavent binaries
 
 ## General program theory
 
