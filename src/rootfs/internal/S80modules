@@ -1,3 +1,5 @@
+# Written By: Matteo Vidali
+# Version 1.0
 case "$1" in
   start)
 	insmod /etc/modules/uio_pcnt.ko

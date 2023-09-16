@@ -1,3 +1,4 @@
+# v1.0 - Matteo Vidali
 FILES="/stuff/files/*"
 OUT="/stuff/output.txt"
 

@@ -1,3 +1,5 @@
+# Written By: Matteo Vidali 
+# Version 1.0
 sudo mount -o loop autograder.ext2 /mnt/uio
 sudo mkdir /mnt/uio/stuff
 sudo mkdir /mnt/uio/etc/modules

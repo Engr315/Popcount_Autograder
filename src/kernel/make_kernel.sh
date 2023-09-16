@@ -1,6 +1,6 @@
 #!/bin/bash
 # Author: Matteo Vidali <mvidali@iu.edu>
-# Version: 0.1
+# Version: 1.0
 # Usage: Run this file to compile the custom linux kernel v5.10.4
 KERN_LOC=./linux-5.10.4
 KERN_TAR="$KERN_LOC.tar.gz"

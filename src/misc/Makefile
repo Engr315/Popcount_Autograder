@@ -1,5 +1,6 @@
 # Author: Matteo Vidali
 # ---------------------
+# Version: 1.0
 # Test makefile that the docker image will use to
 # test the students code.
 # ---------------------

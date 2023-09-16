@@ -1,3 +1,5 @@
+# Written By: Matteo Vidali 
+# Version 1.0
 all: kernel rootfs module
 
 deps:

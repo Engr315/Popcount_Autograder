@@ -1,9 +1,12 @@
+// Written By Matteo Vidali <mvidali@iu.edu>
+// For Dr. Lukefahr - E315 course
+// Version 1.0
 #include <linux/device.h>
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/uio_driver.h>
 
-#include <asm/io.h>  //Why?
+#include <asm/io.h>  
 
 #define VERSION "0.1"
 #define AUTHOR "Matteo Vidali"

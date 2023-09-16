@@ -1,4 +1,6 @@
 #!/bin/bash
+# Written By: Matteo Vidali <mvidali@iu.edu>
+# Version 1.0
 
 BR_LOC=./buildroot
 
