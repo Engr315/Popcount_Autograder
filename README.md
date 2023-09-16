@@ -49,10 +49,37 @@ Then to run the system:
 `make qemu-run`
 
 To put things in the filesystem, see section "Putting things in File System":
-#TODO
 
 ### Building everything from scratch
-#TODO
+To build QEMU, either run:
+
+`make build-qemu`
+
+To build the testing version of QEMU which has more functionoality AND REQUIRES MORE DEPENDANCIES & DYNAMICALLY LINKED LIBRARIES!
+
+Or run:
+
+`make build-qemu-pack`
+
+To build the condensed version of qemu with most features disabled and all dynamic libraries included.
+
+
+To build the Kernel, Kernel Module, and Rootfs, you can run:
+
+`make build-components`
+
+Which will build all three, or you can build them each individually via:
+
+```bash
+    cd src
+    make kernel
+    make kernel_module
+    make rootfs
+```
+
+or by running the shell build scripts in the individual component directories.
+
+**NOTE**: you must build or have built the kernel in the past to build the kernel\_module as it requires the kernel directory to build
 
 ### Putting things in filesystem
 To put files into the qmeu filesystem, run:
@@ -64,35 +91,6 @@ If you want to place the item in an image other than the testing image (`compile
 `IMG=<path/to/e2fs>`
 
 This will place your item in the `/stuff` folder in the desired image
-
-### DEBIAN ONLY: Automated
-Clone this repository as it is:
-`git clone https://github.com/Engr315/Popcount_Autograder.git`
-
-To install dependancies, build binaries and run the qemu system, run:
-`make`
-
-To create the release, the command 
-`make assemble-qemu-pack`
-can be used. This will build qemu with as few necessary dynamic libraries as possible,
-and then take only the necessary files for the autograder to run and package them 
-along with the other required files (like Makefile etc.) into the tar.gz file.
-
-### DEBIAN & RHEL - Multi-command setup
-For a more controlled installation process, begin by installing requirements with:
-
-Debian: `make deps`
-
-RHEL: `make deps-rhel`
-
-Then the binaries can be built with:
-`make build`
-
-To make just the QEMU binary, run:
-`make build-qemu`
-
-To run the system, run:
-`make run`
 
 ## Documentation and Info
 

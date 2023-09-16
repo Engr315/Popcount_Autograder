@@ -83,6 +83,10 @@ build-qemu:
 	#(cd qemu315/build-inst; make -j$(nproc) install DESTDIR=./package_install)
 	(cd qemu315/build; make -j$(nproc))
 
+.PHONY: build-components
+build-components:
+	cd src && make kernel && make kernel_module && make rootfs
+
 # Builds qemu with as few enabled libraries as possible
 # May still be able to build with the --disable-fdt flag to remove dependancy
 # on libfdt-dev
