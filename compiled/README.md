@@ -8,6 +8,7 @@ locally on your machine.
 ### Binaries
  - `uio_pcnt.ko` - is the compiled kernel driver required for the uio device
  - `uio_linux-5.10.4.zImage` - is the custom kernel to run the QEMU instance with
+ - `u-dma-buf.ko` - is the dma kernel module required by the DMA Tester #TODO: add build instructions to README
 ### Filesystems
  - `autograder.ext2` 
     - This is the compiled ext2 filesystem to run on the autograder. It contains 
