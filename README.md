@@ -24,7 +24,7 @@ There are several ways to use and build this package.
     these are all located in the `/src` directory.
 
 ### Building Autograder From Release
-To use this package with the autograder, simply download the `Dockerfile` and `docker.Makefile`
+To use this package with the autograder, simply download the `Dockerfile` 
 from the main directory and build a custom sandbox image in the autograder using these.
 This will pull from the latest release, and use the latest binaries.
 
