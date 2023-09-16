@@ -16,6 +16,6 @@ Each component can also be built individually using:
 - **misc**: contains important files for the autograder.
     - `compare`: a comparison file of good outputs of running popcount on each file
     - `Makefile`: The main testing makefile for the autograder - includes `make result` and `make test`
-    - `README.md`: currently empty readme: #TODO: Describe operation of makefile in readme here.
+    - `README.md`: currently empty readme: 
     - `S90dma`: is a start shell script which will run the student dma popcount inside of qemu and shut down the system. This will be placed onto the QEMU disk image in the event of testing student DMA code.
     - `S90mmio`: is a start shell script to run student `user_mmio.arm` file inside of qemu, and shutdown the system. To be used in the event of testing student mmio code.
