@@ -5,6 +5,8 @@ Written by: Matteo Vidali [mvidali@iu.edu](mvidali@iu.edu)
 For questions and Concerns regarding this system - email Matteo Vidali,
 or make a pull request.
 
+FOR INSTRUCTIONS ON RUNNING THE AUTOGRADER, look in `/src/misc/README.md`
+
 ## Installation and Building
 There are several ways to use and build this package. 
 
