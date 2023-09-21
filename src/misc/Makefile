@@ -36,6 +36,11 @@ result: place_script
 test: 
 	sed -n '/$(TEST_FILE)/p' result | grep $($(TEST_FILE)_V); test $$? -eq 0
 
+.PHONY: test_time
+test_time: $(TIME)
+	$(OUTPUT_TIME) = sed -n '/$(TEST_FILE)/p' result | sed -n -e 's/^.*| //p' | bc -l 
+	test $(echo "$(OUTPUT_TIME) < $(TIME)" | bc) -ne 0
+
 user_$(TEST).arm: user_$(TEST).c
 	arm-linux-gnueabi-gcc -static -o user_$(TEST).arm user_$(TEST).c	
 

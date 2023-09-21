@@ -1,14 +1,17 @@
-# v1.0 - Matteo Vidali
+# v2.0 - Matteo Vidali
 FILES="/stuff/files/*"
 OUT="/stuff/output.txt"
 
 chmod +x /stuff/user_dma.arm
 rm ${OUT}
+rm /stuff/time.out
 
 for f in ${FILES}
 do
 echo -n "$(basename ${f}) " >> ${OUT}
-/stuff/user_dma.arm $f >> ${OUT}
+time -f %e -o /stuff/time.out /stuff/dma.sh $f | tr '\n' ' ' >> ${OUT}
+echo -n "| " >> ${OUT}
+cat time.out >> ${OUT}
 done
 
 poweroff

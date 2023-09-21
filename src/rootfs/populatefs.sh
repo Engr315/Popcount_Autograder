@@ -9,6 +9,7 @@ sudo cp ../../compiled/u-dma-buf.ko /mnt/uio/etc/modules/u-dma-buf.ko
 sudo cp internal/inittab /mnt/uio/etc/inittab
 sudo cp internal/S80modules /mnt/uio/etc/init.d/
 sudo cp internal/data/* /mnt/uio/stuff/files/
+sudo cp internal/dma.sh /mnt/uio/stuff/dma.sh
 sudo chmod u+x /mnt/uio/etc/init.d/S80modules
 sudo umount /mnt/uio
 sudo rmdir /mnt/uio
