@@ -1,10 +1,12 @@
 # v2.0 - Matteo Vidali
+# Setup variables
 FILES="/stuff/files/*"
 OUT="/stuff/output.txt"
 
 chmod +x /stuff/user_mmio.arm
 rm ${OUT}
 rm /stuff/time.out
+touch /stuff/time.out
 
 for f in ${FILES}
 do

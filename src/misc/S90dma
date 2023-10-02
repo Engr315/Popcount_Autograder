@@ -1,17 +1,23 @@
-# v2.0 - Matteo Vidali
+# v2.1 - Matteo Vidali
+# Setup variables
 FILES="/stuff/files/*"
 OUT="/stuff/output.txt"
 
+# Ensure that dma user-driver is executable
+# and remove old run files
 chmod +x /stuff/user_dma.arm
 rm ${OUT}
 rm /stuff/time.out
+touch /stuff/time.out
 
+# Run dma driver on all files in FILES directory
 for f in ${FILES}
 do
 echo -n "$(basename ${f}) " >> ${OUT}
-time -f %e -o /stuff/time.out /stuff/dma.sh $f | tr '\n' ' ' >> ${OUT}
+# -f %e gets just real time, and tr makes it all oneline
+time -f %e -o /stuff/time.out /stuff/user_dma.arm $f | tr '\n' ' ' >> ${OUT}
 echo -n "| " >> ${OUT}
-cat time.out >> ${OUT}
+cat /stuff/time.out >> ${OUT}
 done
 
 poweroff
