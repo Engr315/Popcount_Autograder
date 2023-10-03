@@ -4,13 +4,14 @@
 # Test makefile that the docker image will use to
 # test the students code.
 # ---------------------
+
 IMG?=./compiled/uio-rootfs2.ext2
 TEST=mmio
 DEVQEMU=qemu/bin/qemu-system-arm
 KRNL=compiled/uio_linux-5.10.4.zImage 
 IMG=compiled/autograder.ext2
-
 TEST_FILE=zeros.bin
+TIME=$(shell sed -n '/large.bin/p' result | sed -n -e 's/^.*| //p')
 
 zeros.bin_V="0"
 ones.bin_V="2048"
@@ -34,12 +35,11 @@ result: place_script
 
 .PHONY: test
 test: 
-	sed -n '/$(TEST_FILE)/p' result | grep $($(TEST_FILE)_V); test $$? -eq 0
+	@sed -n '/$(TEST_FILE)/p' result | grep $($(TEST_FILE)_V); test $$? -eq 0
 
 .PHONY: test_time
-test_time: $(TIME)
-	$(OUTPUT_TIME) = sed -n '/$(TEST_FILE)/p' result | sed -n -e 's/^.*| //p' | bc -l 
-	test $(echo "$(OUTPUT_TIME) < $(TIME)" | bc) -ne 0
+test_time:
+	@echo "${TIME} < ${TEST_TIME}" | bc -l
 
 user_$(TEST).arm: user_$(TEST).c
 	arm-linux-gnueabi-gcc -static -o user_$(TEST).arm user_$(TEST).c	
